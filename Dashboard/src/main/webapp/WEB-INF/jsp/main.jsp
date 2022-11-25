@@ -10,7 +10,5 @@
 <h1>메인</h1>
 <a href = "http://localhost:8080/Dashboard/detail.do">데이터 상세 분석</a><br><br>
 <a href = "http://localhost:8080/Dashboard/risk.do">위험도 상태</a><br><br>
-<a href = "http://localhost:8080/Dashboard/display.do">데이터 현황</a><br><br>
-<a href = "http://localhost:8080/Dashboard/dbName">이름 테이블 생성</a><br><br>
 </body>
 </html>

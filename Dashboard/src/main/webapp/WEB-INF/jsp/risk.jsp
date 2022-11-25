@@ -3,10 +3,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>위험도 분석</title>
 </head>
+<script type="text/javascript">
+	
+</script>
 <body>
-<h1>위험도 상태</h1>
+
+<a href="http://localhost:5000/Dashboard/risk">위험도 데이터</a>
+
+
 </body>
 </html>

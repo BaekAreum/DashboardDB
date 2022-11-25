@@ -13,15 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.*;
+import java.net.*;
 
 import dashboard.fwd.domain.ClimateVO;
 import dashboard.fwd.domain.ParameterList;
 import dashboard.fwd.service.FwdService;
 
 
-//@CrossOrigin(origins = "http://localhost:8080")
 @Controller
 //@RequestMapping("/detail/*")
 //@RestController
@@ -30,53 +32,6 @@ public class FwdController {
 	@Autowired
 	private FwdService service;
 	
-	public String returnClimate() throws Exception{
-		ObjectMapper mapper = new ObjectMapper();
-		ClimateVO vo = new ClimateVO();
-		List<ClimateVO> list = service.selectTest(vo);
-		/*
-		for(int i = 0; i < list.size(); i++) {
-		System.out.println(list.get(i));
-		}
-		*/
-		
-//		model.addAttribute("list", list);
-		String json = mapper.writeValueAsString(list);	
-		return json;
-	}
-	
-	/*
-	public String returnGochang() throws Exception{
-		ObjectMapper mapper = new ObjectMapper();
-		GochangDataVO vo = new GochangDataVO();
-		List<GochangDataVO> list = service.returnGochangData(vo);
-		
-		String json = mapper.writeValueAsString(list);	
-		return json;
-	}
-	*/
-	
-	/*
-	@RequestMapping(value="/{parameter}", method=RequestMethod.GET)
-	@ResponseBody
-	// "Dashboard/detail/{}"로 해야 됨
-	// parameter는 climate, gochang
-	public String returnParameter(@PathVariable("parameter") String parameter) throws Exception {  //Model model
-	
-		String json = "";
-		System.out.println("파라미터: "+parameter);
-			
-		if(parameter.equals("climate")) {
-			System.out.println("parameter: climate");
-			json = returnClimate();
-		}else if(parameter.equals("gochang")){
-			System.out.println("parameter: gochang");
-			json = returnGochang();
-		}
-		
-		return json;
-	}
-	*/
 	@RequestMapping(value="/{parameter}", method=RequestMethod.GET)
 	@ResponseBody
 	// "Dashboard/detail/{}"로 해야 됨
@@ -106,19 +61,59 @@ public class FwdController {
 		
 		String json = mapper.writeValueAsString(list2);	
 		return json;
-		/*	
-		if(parameter.equals("climate")) {
-			System.out.println("parameter: climate");
-			json = returnClimate();
-		}else if(parameter.equals("gochang")){
-			System.out.println("parameter: gochang");
-			json = returnGochang();
-		}
-		*/
-		
+
+	}
 	
-		
-//		return service.returnData(list);
+
+	//../Dashboard/risk  (포트 번호 5000으로 해야 하는지 테스트 해야 됨.. 백엔드에서 실행할 때는 주소를 5000으로 해야 됐음)
+	@RequestMapping(value = "/risk", method = RequestMethod.GET)
+	public ModelAndView Test() {
+		ModelAndView mav = new ModelAndView();
+		String url = "http://127.0.0.1:5000/Dashboard/risk";
+		String sb = "";
+		try {
+			HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+			
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+
+			String line = null;
+
+			while ((line = br.readLine()) != null) {
+				sb = sb + line + "\n";
+			}
+			System.out.println("===============" + sb.toString());
+			if (sb.toString().contains("ok")) {
+				System.out.println("risk page ok");
+				
+			}
+			br.close();
+
+			System.out.println("" + sb.toString());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		mav.addObject("risk", sb.toString()); // "test1"는 jsp파일에서 받을때 이름, 
+        						//sb.toString은 value값(여기에선 test)
+		mav.addObject("fail", false);
+		mav.setViewName("risk");   // jsp파일 이름
+		return mav;
+	}
+	
+	
+	@GetMapping("/main.do")
+	public String mainPage() {
+		return "main";
+	}
+	@GetMapping("/detail.do")
+	public String detailPage() {
+		return "detail";
+	}
+	@GetMapping("/risk.do")
+	public String riskPage() {
+		return "risk";
 	}
 	
 	/*
@@ -137,17 +132,42 @@ public class FwdController {
 	}
 	
 	*/
-	
 	/*
-	@RequestMapping(value="detail.do")
-	public String testListDo(ClimateVO vo, Model model) throws Exception{
-		model.addAttribute("list", service.selectTest(vo));
-		System.out.println( "vo : " + vo.toString() );
-		return "detail";
+	public String returnClimate() throws Exception{
+		ObjectMapper mapper = new ObjectMapper();
+		ClimateVO vo = new ClimateVO();
+		List<ClimateVO> list = service.selectTest(vo);
+		
+		for(int i = 0; i < list.size(); i++) {
+		System.out.println(list.get(i));
+		}
+		
+		String json = mapper.writeValueAsString(list);	
+		return json;
 	}
-	*/
 	
-
+	
+	@RequestMapping(value="/{parameter}", method=RequestMethod.GET)
+	@ResponseBody
+	// "Dashboard/detail/{}"로 해야 됨
+	// parameter는 climate, gochang
+	public String returnParameter(@PathVariable("parameter") String parameter) throws Exception {  //Model model
+	
+		String json = "";
+		System.out.println("파라미터: "+parameter);
+			
+		if(parameter.equals("climate")) {
+			System.out.println("parameter: climate");
+			json = returnClimate();
+		}else if(parameter.equals("gochang")){
+			System.out.println("parameter: gochang");
+			json = returnGochang();
+		}
+		
+		return json;
+	}
+	
+	
 	@RequestMapping(value="/detail.do")
 	public String selectReqUrl(@ModelAttribute("searchVO") ClimateVO searchVO, ModelMap model) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
@@ -156,20 +176,6 @@ public class FwdController {
 		model.addAttribute("json", json); //service.selectTest(searchVO)
 		return "detail";
 	}
-	
-	
-	
-	@GetMapping("/main.do")
-	public String mainPage() {
-		return "main";
-	}
-	@GetMapping("/display.do")
-	public String displayPage() {
-		return "display";
-	}
-	@GetMapping("/risk.do")
-	public String riskPage() {
-		return "risk";
-	}
+	*/
 	
 }
