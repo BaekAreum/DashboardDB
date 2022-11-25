@@ -11,7 +11,7 @@
 </script>
 <body>
 
-<a href="http://localhost:5000/Dashboard/risk">위험도 데이터</a>
+<a href="http://localhost:5000/Dashboard/risk">*위험도 데이터</a>
 
 
 </body>
