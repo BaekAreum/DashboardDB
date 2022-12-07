@@ -11,7 +11,7 @@
 </script>
 <body>
 
-<!--<a href="http://localhost:8080/Dashboard/detail/risk?sdate=20211208&edate=20211208">*위험도 데이터</a>-->
+<!-- <a href="http://localhost:8080/Dashboard/detail/risk?sdate=20211208&edate=20211208">*위험도 데이터</a> -->
 
 
 </body>
